@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.fragments.taskList.TaskListFragment"
+    android:background="#E7ECED"
+    android:orientation="vertical">
+    <TextView
+        android:paddingTop="36dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Task List"
+        android:textColor="#141212"
+        android:paddingStart="100dp"
+        android:textSize="50sp"
+        android:textStyle="bold"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_task"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+    <Button
+        android:id="@+id/btn_add"
+        android:background="@drawable/corner"
+        android:layout_marginTop="500dp"
+        android:layout_marginStart="250dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="+"
+        android:textSize="26sp"/>
+
+
+
+
+
+</LinearLayout>

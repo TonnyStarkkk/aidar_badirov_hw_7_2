@@ -3,25 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainActivity">
+    app:startDestination="@id/taskListFragment">
 
-    <activity
-        android:id="@+id/mainActivity"
-        android:name="com.geeks.cleanArch.presentation.activity.MainActivity"
-        android:label="Первая Activity"
-        tools:layout="@layout/activity_main">
+    <fragment
+        android:id="@+id/addTaskFragment"
+        tools:layout="@layout/fragment_add_task"
+        android:label="AddTaskFragment"
+        android:name="com.geeks.cleanArch.presentation.fragments.addTask.AddTaskFragment">
         <action
-            android:id="@+id/action_mainActivity_to_secondActivity"
-            app:destination="@id/secondActivity" />
-    </activity>
-
-    <activity
-        android:id="@+id/secondActivity"
-        android:name="com.geeks.cleanArch.presentation.activity.SecondActivity"
-        android:label="Вторая Activity"
-        tools:layout="@layout/activity_second">
+            android:id="@+id/action_AddTaskFragment_to_taskListFragment"
+            app:destination="@id/taskListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskListFragment"
+        android:name="com.geeks.cleanArch.presentation.fragments.taskList.TaskListFragment"
+        android:label="TaskListFragment" >
         <action
-            android:id="@+id/action_secondActivity_to_mainActivity"
-            app:destination="@id/mainActivity" />
-    </activity>
+            android:id="@+id/action_taskListFragment_to_AddTaskFragment"
+            app:destination="@id/addTaskFragment" />
+        <action
+            android:id="@+id/action_taskListFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.geeks.cleanArch.presentation.fragments.detail.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="taskId"
+            app:argType="integer"/>
+    </fragment>
 </navigation>

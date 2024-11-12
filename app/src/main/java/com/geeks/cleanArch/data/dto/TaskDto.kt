@@ -8,8 +8,9 @@ import com.geeks.cleanArch.domain.model.TaskModel
 data class TaskDto(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val taskName: String? = null,
-    val taskDate: String? = null
+    val taskDate: String? = null,
+    val taskImage: String? = null
 )
 
-fun TaskModel.toData() = TaskDto(id, taskName, taskDate)
-fun TaskDto.toDomain() = TaskModel(id, taskName.orEmpty(), taskDate.orEmpty())
+fun TaskModel.toData() = TaskDto(id, taskName, taskDate, taskImage)
+fun TaskDto.toDomain() = TaskModel(id, taskName.orEmpty(), taskDate.orEmpty(), taskImage.orEmpty())

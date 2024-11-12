@@ -5,40 +5,18 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.activity.MainActivity"
-    android:padding="16dp">
+    tools:context=".presentation.activity.MainActivity">
 
-
-    <EditText
-        android:id="@+id/et_task"
-        style="@style/CustomEditText"
-        android:hint="Задача"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/nav_graph"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <EditText
-        android:id="@+id/et_date"
-        style="@style/CustomEditText"
-        android:hint="Дата"
-        app:layout_constraintTop_toBottomOf="@id/et_task"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-    
-    <Button
-        android:id="@+id/btn_save"
-        style="@style/CustomButton"
-        android:text="Сохранить"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_date" />
-
-    <Button
-        android:id="@+id/btn_show"
-        style="@style/CustomButton"
-        android:text="Показать"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_save" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
