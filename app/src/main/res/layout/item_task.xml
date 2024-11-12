@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    android:layout_height="wrap_content"
+    android:background="@drawable/corner"
+    android:orientation="horizontal"
+    >
     <TextView
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:drawableStart="@drawable/baseline_task"
         android:id="@+id/tv_task"
+        android:paddingStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Task"
-        android:textColor="@color/primaryColorDark"
-        android:textSize="20sp" />
+        android:textStyle="bold"
+        android:textSize="26dp"/>
 
     <TextView
         android:id="@+id/tv_date"
-        android:layout_marginStart="100dp"
         android:layout_width="wrap_content"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Date"/>
+        android:layout_marginStart="240dp"
+        android:drawableStart="@drawable/baseline_access"
 
-
+        android:text="21:00" />
 
 </LinearLayout>

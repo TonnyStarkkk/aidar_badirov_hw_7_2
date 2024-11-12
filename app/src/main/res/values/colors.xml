@@ -6,4 +6,6 @@
     <color name="primaryColorDark">#3700B3</color>
     <color name="textColorPrimary">#000000</color>
     <color name="textColorSecondary">#888888</color>
+    <color name="green">#4CAF50</color>
+    <color name="gray">#C66B6868</color>
 </resources>
