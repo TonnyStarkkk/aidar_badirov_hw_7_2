@@ -1,13 +1,12 @@
 package com.geeks.cleanArch
 
 import android.app.Application
-import com.geeks.cleanArch.data.database.di.dataModules
-import com.geeks.cleanArch.domain.di.domainModule
+import com.example.domain.di.domainModule
 import com.geeks.cleanArch.presentation.di.uiModule
+import com.geeks.data.database.di.dataModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
 
 class App : Application() {
 
