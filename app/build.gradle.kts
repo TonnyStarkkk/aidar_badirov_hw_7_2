@@ -42,23 +42,15 @@ android {
 
 dependencies {
 
-    // Retrofit
-    implementation(libs.retrofit)
-
-    // OkHttp
-    implementation(libs.okhttp)
-//    implementation(libs.logging.interceptor)
+    implementation(project(":domain"))
+    implementation(project(":data"))
 
     // Koin
-    runtimeOnly(libs.koin.android)
-    implementation(libs.koin.androidx.navigation)
-    implementation(libs.koin.core.coroutines)
-    implementation(libs.koin.core.viewmodel)
+    implementation(libs.koin.android)
 
     // Room
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-
+   // implementation(libs.androidx.room.ktx)
+    //ksp(libs.androidx.room.compiler)
     implementation(libs.gson)
 
     implementation(libs.androidx.core.ktx)

@@ -1,14 +1,15 @@
 package com.geeks.cleanArch.presentation.fragments.addTask
 
+import android.os.Build
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.geeks.cleanArch.domain.usecase.DeleteTaskUseCase
-import com.geeks.cleanArch.domain.usecase.GetAllTasksUseCase
-import com.geeks.cleanArch.domain.usecase.GetTaskUseCase
-import com.geeks.cleanArch.domain.usecase.InsertTaskUseCase
-import com.geeks.cleanArch.domain.usecase.UpdateTaskUseCase
+import com.example.domain.usecase.DeleteTaskUseCase
+import com.example.domain.usecase.GetAllTasksUseCase
+import com.example.domain.usecase.GetTaskUseCase
+import com.example.domain.usecase.InsertTaskUseCase
+import com.example.domain.usecase.UpdateTaskUseCase
 import com.geeks.cleanArch.presentation.model.TaskUI
 import com.geeks.cleanArch.presentation.model.toDomain
 import com.geeks.cleanArch.presentation.model.toUI
@@ -81,7 +82,7 @@ class TaskViewModel(
 
     fun insertTask(taskUI: TaskUI) {
         runLaunchIO {
-            val message = insertTaskUseCase.insertTask(taskUI.toDomain())
+            val message = insertTaskUseCase.insertTask(taskUI.toDomain(), Build.VERSION.SDK_INT)
             _insertMessageStateFlow.value = message
         }
     }

@@ -1,6 +1,7 @@
 package com.geeks.cleanArch.presentation.model
 
-import com.geeks.cleanArch.domain.model.TaskModel
+import com.example.domain.model.TaskModel
+
 
 data class TaskUI(
     val id: Int,

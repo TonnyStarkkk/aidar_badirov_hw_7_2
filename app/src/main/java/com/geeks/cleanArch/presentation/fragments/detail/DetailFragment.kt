@@ -17,9 +17,7 @@ import com.geeks.cleanArch.databinding.FragmentDetailBinding
 import com.geeks.cleanArch.presentation.fragments.addTask.LoadingState
 import com.geeks.cleanArch.presentation.fragments.addTask.TaskViewModel
 import com.geeks.cleanArch.presentation.model.TaskUI
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import okhttp3.internal.concurrent.Task
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
