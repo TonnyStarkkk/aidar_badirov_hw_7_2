@@ -26,12 +26,11 @@ class AddTaskFragment : Fragment(R.layout.fragment_add_task) {
     private val binding by viewBinding(FragmentAddTaskBinding::bind)
     private val viewModel: TaskViewModel by viewModel()
     private var imageString: String? = null
-    private val imageLauncher: ActivityResultLauncher<String> by lazy {
+    private val imageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            uri?.let {
-                binding.changeImage.setImageURI(uri)
-                imageString = uri.toString()
-            }
+        uri?.let {
+            binding.changeImage.setImageURI(uri)
+            imageString = uri.toString()
         }
     }
 
@@ -39,7 +38,13 @@ class AddTaskFragment : Fragment(R.layout.fragment_add_task) {
         super.onViewCreated(view, savedInstanceState)
         setupListeners()
 
-        lifecycleScope.launchWhenCreated {
+        viewModel.viewModelScope.launch {
+            viewModel.insertMessageFlow.collectLatest {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.viewModelScope.launch {
             viewModel.loadingFlow.collect { state ->
                 when(state) {
                     is LoadingState.Loading -> {}
@@ -65,12 +70,7 @@ class AddTaskFragment : Fragment(R.layout.fragment_add_task) {
             val taskUI = TaskUI(0, task, date, imageString.toString())
             viewModel.insertTask(taskUI)
 
-            viewModel.viewModelScope.launch {
-                viewModel.insertMessageFlow.collectLatest {
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                }
-            }
-            findNavController().navigate(R.id.action_AddTaskFragment_to_taskListFragment)
+            findNavController().popBackStack()
         }
     }
 }

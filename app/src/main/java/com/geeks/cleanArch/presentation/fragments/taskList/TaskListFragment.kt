@@ -25,7 +25,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
 
     private val binding by viewBinding(FragmentTaskListBinding::bind)
     private val viewModel: TaskViewModel by viewModel()
-    private lateinit var taskAdapter: TaskAdapter
+    private val taskAdapter = TaskAdapter(emptyList(), ::onItemClick, ::onTaskDelete)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,7 +34,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         initialize()
         showTask()
 
-        lifecycleScope.launchWhenCreated {
+        viewModel.viewModelScope.launch {
             viewModel.loadingFlow.collect { state ->
                 when (state) {
                     is LoadingState.Loading -> {}
@@ -50,20 +50,11 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
 
     private fun addTask() {
         binding.btnAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_taskListFragment_to_AddTaskFragment)
+            findNavController().navigate(TaskListFragmentDirections.actionTaskListFragmentToAddTaskFragment())
         }
     }
 
     private fun initialize() {
-        taskAdapter = TaskAdapter(emptyList(), { task ->
-            viewModel.viewModelScope.launch {
-                viewModel.getTask(id)
-            }
-            val action = TaskListFragmentDirections.actionTaskListFragmentToDetailFragment(task)
-            findNavController().navigate(action)
-        }, { task ->
-            viewModel.deleteTask(task)
-        })
         binding.rvTask.adapter = taskAdapter
         taskAdapter.attachSwipeToRecyclerView(binding.rvTask)
     }
@@ -76,4 +67,15 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         }
     }
 
+    private fun onItemClick(id: Int) {
+        viewModel.viewModelScope.launch {
+            viewModel.getTask(id)
+        }
+        val action = TaskListFragmentDirections.actionTaskListFragmentToDetailFragment(id)
+        findNavController().navigate(action)
+    }
+
+    private fun onTaskDelete(taskUI: TaskUI) {
+        viewModel.deleteTask(taskUI)
+    }
 }
