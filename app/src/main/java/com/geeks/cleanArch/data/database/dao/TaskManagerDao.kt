@@ -19,7 +19,7 @@ interface TaskManagerDao {
     fun getAllTasks(): Flow<List<TaskDto>>
     
     @Query("SELECT * FROM taskdto WHERE taskName = :taskName LIMIT 1")
-    suspend fun getTaskByName(taskName: String): TaskDto?
+    suspend fun getTaskByName(taskName: String): TaskDto
 
     @Query("SELECT * FROM TaskDto WHERE id = :id")
     suspend fun getTaskById(id: Int): TaskDto

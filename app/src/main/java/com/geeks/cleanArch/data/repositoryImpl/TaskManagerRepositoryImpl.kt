@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.map
 class TaskManagerRepositoryImpl(
     private val taskManagerDao: TaskManagerDao
 ) : TaskManagerRepository {
-    override suspend fun getTask(id: Int): TaskModel? {
+    override suspend fun getTask(id: Int): TaskModel {
         val taskDto = taskManagerDao.getTaskById(id)
-        return taskDto?.toDomain()
+        return taskDto.toDomain()
     }
 
     override suspend fun insertTask(taskModel: TaskModel) {

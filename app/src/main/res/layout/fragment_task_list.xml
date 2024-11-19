@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".presentation.fragments.taskList.TaskListFragment"
-    android:background="#E7ECED"
-    android:orientation="vertical">
+    android:background="@color/gray"
+    tools:context=".presentation.fragments.taskList.TaskListFragment">
+
     <TextView
-        android:paddingTop="36dp"
-        android:layout_width="match_parent"
+        android:id="@+id/tv_task_list_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task List"
-        android:textColor="#141212"
-        android:paddingStart="100dp"
-        android:textSize="50sp"
-        android:textStyle="bold"/>
+        android:layout_marginTop="32dp"
+        android:text="@string/task_list_title"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_task"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         tools:listitem="@layout/item_task"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/tv_task_list_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_add"
+        android:padding="8dp" />
 
     <Button
         android:id="@+id/btn_add"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:background="@drawable/corner"
-        android:layout_marginTop="500dp"
-        android:layout_marginStart="250dp"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
         android:text="+"
-        android:textSize="26sp"/>
+        android:textSize="26sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/add_task_description" />
 
-
-
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
