@@ -1,6 +1,7 @@
 package com.geeks.cleanArch
 
 import android.app.Application
+import com.example.addtaskfeature.module.addTaskModule
 import com.example.domain.di.domainModule
 import com.geeks.cleanArch.presentation.di.uiModule
 import com.geeks.data.database.di.dataModules
@@ -18,6 +19,7 @@ class App : Application() {
             modules(dataModules)
             modules(domainModule)
             modules(uiModule)
+            modules(addTaskModule)
         }
     }
 }

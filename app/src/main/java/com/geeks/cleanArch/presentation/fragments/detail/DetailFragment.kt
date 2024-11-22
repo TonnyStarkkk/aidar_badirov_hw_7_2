@@ -2,20 +2,17 @@ package com.geeks.cleanArch.presentation.fragments.detail
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.geeks.cleanArch.R
 import com.geeks.cleanArch.databinding.FragmentDetailBinding
-import com.geeks.cleanArch.presentation.fragments.addTask.LoadingState
-import com.geeks.cleanArch.presentation.fragments.addTask.TaskViewModel
+import com.geeks.cleanArch.presentation.fragments.LoadingState
+import com.geeks.cleanArch.presentation.fragments.TaskViewModel
 import com.geeks.cleanArch.presentation.model.TaskUI
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
