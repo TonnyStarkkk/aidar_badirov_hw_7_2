@@ -9,11 +9,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.domain.result.Result
 import com.geeks.cleanArch.R
 import com.geeks.cleanArch.databinding.FragmentDetailBinding
 import com.geeks.cleanArch.presentation.fragments.LoadingState
 import com.geeks.cleanArch.presentation.fragments.TaskViewModel
 import com.geeks.cleanArch.presentation.model.TaskUI
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,28 +30,49 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getTask(navArgs.taskId)
+        viewModel.loadTask(id)
         setupListeners()
         updateUI()
 
-        viewModel.loadTask(navArgs.taskId)
 
-        viewModel.viewModelScope.launch {
-            viewModel.taskStateFlow.collect { task ->
-                task?.let {
-                    taskUI = task
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            viewModel.tasksFlow.collect { task ->
+                task.let {
+                    taskUI = task[id]
                     updateUI()
                 }
             }
         }
 
         viewModel.viewModelScope.launch {
-            viewModel.loadingFlow.collect {state ->
-                when(state ) {
+            viewModel.loadingFlow.collect { state ->
+                when (state) {
                     is LoadingState.Loading -> {}
                     is LoadingState.Error -> {
-                        Toast.makeText(requireContext(), "Error updating task", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Error updating task", Toast.LENGTH_SHORT)
+                            .show()
                     }
+
                     else -> {}
+                }
+            }
+        }
+
+        viewModel.viewModelScope.launch(Dispatchers.Main) {
+            viewModel.taskStateFlow.collectLatest {
+                when (it) {
+                    is Result.Success -> {
+                        taskUI = it.data
+                    }
+
+                    is Result.Error -> {
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    }
+
+                    is Result.Loading -> {
+                        Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
