@@ -1,23 +1,22 @@
 package com.geeks.cleanArch.presentation.fragments.taskList
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.ContentInfoCompat.Flags
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.addtaskfeature.addTask.activity.AddTaskActivity
 import com.geeks.cleanArch.R
 import com.geeks.cleanArch.databinding.FragmentTaskListBinding
 import com.geeks.cleanArch.presentation.fragments.adapter.TaskAdapter
-import com.geeks.cleanArch.presentation.fragments.addTask.LoadingState
-import com.geeks.cleanArch.presentation.fragments.addTask.TaskViewModel
+import com.geeks.cleanArch.presentation.fragments.LoadingState
+import com.geeks.cleanArch.presentation.fragments.TaskViewModel
 import com.geeks.cleanArch.presentation.model.TaskUI
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -42,6 +41,7 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
                         Toast.makeText(requireContext(), "Error loading task", Toast.LENGTH_SHORT)
                             .show()
                     }
+
                     else -> {}
                 }
             }
@@ -50,7 +50,10 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
 
     private fun addTask() {
         binding.btnAdd.setOnClickListener {
-            findNavController().navigate(TaskListFragmentDirections.actionTaskListFragmentToAddTaskFragment())
+            val intent = Intent(requireContext(), AddTaskActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
         }
     }
 

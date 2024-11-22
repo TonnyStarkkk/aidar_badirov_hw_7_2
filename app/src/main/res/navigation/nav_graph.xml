@@ -6,21 +6,9 @@
     app:startDestination="@id/taskListFragment">
 
     <fragment
-        android:id="@+id/addTaskFragment"
-        tools:layout="@layout/fragment_add_task"
-        android:label="AddTaskFragment"
-        android:name="com.geeks.cleanArch.presentation.fragments.addTask.AddTaskFragment">
-        <action
-            android:id="@+id/action_AddTaskFragment_to_taskListFragment"
-            app:destination="@id/taskListFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/taskListFragment"
         android:name="com.geeks.cleanArch.presentation.fragments.taskList.TaskListFragment"
         android:label="TaskListFragment" >
-        <action
-            android:id="@+id/action_taskListFragment_to_AddTaskFragment"
-            app:destination="@id/addTaskFragment" />
         <action
             android:id="@+id/action_taskListFragment_to_detailFragment"
             app:destination="@id/detailFragment" />

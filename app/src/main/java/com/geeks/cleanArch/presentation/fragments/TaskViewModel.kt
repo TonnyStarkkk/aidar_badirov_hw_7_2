@@ -1,10 +1,8 @@
-package com.geeks.cleanArch.presentation.fragments.addTask
+package com.geeks.cleanArch.presentation.fragments
 
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.domain.usecase.DeleteTaskUseCase
 import com.example.domain.usecase.GetAllTasksUseCase
 import com.example.domain.usecase.GetTaskUseCase
@@ -15,15 +13,10 @@ import com.geeks.cleanArch.presentation.model.toDomain
 import com.geeks.cleanArch.presentation.model.toUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -77,13 +70,6 @@ class TaskViewModel(
             }finally {
                 _loadingStateFlow.value = LoadingState.Loaded
             }
-        }
-    }
-
-    fun insertTask(taskUI: TaskUI) {
-        runLaunchIO {
-            val message = insertTaskUseCase.insertTask(taskUI.toDomain(), Build.VERSION.SDK_INT)
-            _insertMessageStateFlow.value = message
         }
     }
 

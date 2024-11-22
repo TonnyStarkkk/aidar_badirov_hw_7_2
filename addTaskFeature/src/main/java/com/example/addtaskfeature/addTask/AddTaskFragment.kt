@@ -1,22 +1,15 @@
-package com.geeks.cleanArch.presentation.fragments.addTask
+package com.example.addtaskfeature.addTask
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.geeks.cleanArch.R
-import com.geeks.cleanArch.databinding.FragmentAddTaskBinding
-import com.geeks.cleanArch.presentation.model.TaskUI
+import com.example.addtaskfeature.R
+import com.example.addtaskfeature.databinding.FragmentAddTaskBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -24,15 +17,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AddTaskFragment : Fragment(R.layout.fragment_add_task) {
 
     private val binding by viewBinding(FragmentAddTaskBinding::bind)
-    private val viewModel: TaskViewModel by viewModel()
+    private val viewModel: AddTaskViewModel by viewModel()
     private var imageString: String? = null
     private val imageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            binding.changeImage.setImageURI(uri)
-            imageString = uri.toString()
+            uri?.let {
+                binding.changeImage.setImageURI(uri)
+                imageString = uri.toString()
+            }
         }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,18 +34,6 @@ class AddTaskFragment : Fragment(R.layout.fragment_add_task) {
         viewModel.viewModelScope.launch {
             viewModel.insertMessageFlow.collectLatest {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        viewModel.viewModelScope.launch {
-            viewModel.loadingFlow.collect { state ->
-                when(state) {
-                    is LoadingState.Loading -> {}
-                    is LoadingState.Error -> {
-                        Toast.makeText(requireContext(), "Error inserting task", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {}
-                }
             }
         }
     }
@@ -70,7 +51,7 @@ class AddTaskFragment : Fragment(R.layout.fragment_add_task) {
             val taskUI = TaskUI(0, task, date, imageString.toString())
             viewModel.insertTask(taskUI)
 
-            findNavController().popBackStack()
+            requireActivity().finish()
         }
     }
 }
