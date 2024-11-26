@@ -1,10 +1,7 @@
 package com.geeks.cleanArch.presentation.fragments
 
-import android.os.Build
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.TaskModel
 import com.example.domain.result.Result
 import com.example.domain.usecase.DeleteTaskUseCase
 import com.example.domain.usecase.GetAllTasksUseCase
@@ -16,13 +13,13 @@ import com.geeks.cleanArch.presentation.model.toDomain
 import com.geeks.cleanArch.presentation.model.toUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TaskViewModel(
     private val insertTaskUseCase: InsertTaskUseCase,
@@ -34,9 +31,6 @@ class TaskViewModel(
 
     private val _tasksStateFlow = MutableStateFlow<List<TaskUI>>(emptyList())
     val tasksFlow: StateFlow<List<TaskUI>> = _tasksStateFlow.asStateFlow()
-
-    private val _saveTaskStateFlow = MutableStateFlow<Result<TaskUI>>(Result.Loading)
-    val saveTaskStateFlow: StateFlow<Result<TaskUI>> = _saveTaskStateFlow.asStateFlow()
 
     private val _taskStateFlow = MutableStateFlow<Result<TaskUI>>(Result.Loading)
     val taskStateFlow: StateFlow<Result<TaskUI>> = _taskStateFlow.asStateFlow()
@@ -54,44 +48,44 @@ class TaskViewModel(
     val errorMessageFlow: StateFlow<String> = _errorMessageFlow.asStateFlow()
 
     private fun <T> runLaunchIO(block: suspend CoroutineScope.() -> T) {
-        _loadingStateFlow.value = LoadingState.Loading
-        try {
-            viewModelScope.launch(Dispatchers.IO) {
-                block()
-            }
-        } catch (e: Exception) {
-            _errorMessageFlow.value = "Error: ${e.localizedMessage} "
-        } finally {
-            _loadingStateFlow.value = LoadingState.Loaded
-        }
-    }
-
-    fun loadTask(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (val result = insertTaskUseCase(id)) {
-
-                is Result.Loading -> {
-                    _taskStateFlow.value = Result.Loading
-                }
-
-                is Result.Success -> {
-                    _saveTaskStateFlow.value = Result.Success(result.data.toUI())
-                }
-
-                is Result.Error -> {
-                    _taskStateFlow.value = Result.Error(result.message)
-                }
+        viewModelScope.launch {
+            _loadingStateFlow.value = LoadingState.Loading
+            try {
+                withContext(Dispatchers.IO) { block() }
+            } catch (e: Exception) {
+                _errorMessageFlow.value = "Error: ${e.localizedMessage} "
+            } finally {
+                _loadingStateFlow.value = LoadingState.Loaded
             }
         }
     }
 
     fun loadTasks() {
-        runLaunchIO {
-            getAllTaskUseCase().onEach { tasks ->
-                _tasksStateFlow.value = tasks.map { taskModel -> taskModel.toUI() }
-            }.collect()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                getAllTaskUseCase().collect { result ->
+                    when (result) {
+                        is Result.Loading -> {
+                            _tasksStateFlow.value = emptyList()
+                        }
+
+                        is Result.Success -> {
+                            _tasksStateFlow.value = result.data.map { it.toUI() }
+
+                        }
+
+                        is Result.Error -> {
+                            _errorMessageFlow.value = result.message
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Result.Error(e.localizedMessage ?: "Error")
+            }
         }
     }
+
+
 
     fun getTask(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -112,50 +106,68 @@ class TaskViewModel(
         }
     }
 
-    suspend fun updateTask(taskUI: TaskUI) {
-        val result = updateTaskUseCase.updateTask(taskUI.toDomain())
-        viewModelScope.launch(Dispatchers.IO) {
-            when (result) {
+    fun saveTask(taskUI: TaskUI, versionSdk: Int) {
+        runLaunchIO {
+            when (val result = insertTaskUseCase.insertTask(taskUI.toDomain(), versionSdk)) {
                 is Result.Loading -> {
-                    Result.Loading
+                    _taskStateFlow.value = Result.Loading
                 }
 
                 is Result.Success -> {
-                    updateTaskUseCase.updateTask(taskUI.toDomain())
+                    _taskStateFlow.value = Result.Success(result.data.toUI())
+
                 }
 
                 is Result.Error -> {
-                    _errorMessageFlow.value = result.message
+                    _taskStateFlow.value = Result.Error(result.message)
+                }
+            }
+        }
+    }
+
+    fun updateTask(taskUI: TaskUI) {
+        runLaunchIO {
+            when (val result = updateTaskUseCase.updateTask(taskUI.toDomain())) {
+
+                is Result.Loading -> {
+                    _taskStateFlow.value = Result.Loading
                 }
 
-            }
-        }
+                is Result.Success -> {
+                    _taskStateFlow.value = Result.Success(result.data.toUI())
+                    loadTasks()
+                }
 
-    }
-
-    suspend fun deleteTask(taskUI: TaskUI) {
-        val result = deleteTaskUseCase.deleteTask(taskUI.toDomain())
-        when (result) {
-
-            is Result.Loading -> {
-                _taskStateFlow.value = Result.Loading
-            }
-
-            is Result.Success -> {
-                deleteTaskUseCase.deleteTask(taskUI.toDomain())
-                loadTasks()
-            }
-
-            is Result.Error -> {
-                _taskStateFlow.value = Result.Error(result.message)
-
+                is Result.Error -> {
+                    _taskStateFlow.value = Result.Error(result.message)
+                }
             }
         }
     }
-}
 
-sealed class LoadingState {
-    data object Loading : LoadingState()
-    data object Loaded : LoadingState()
-    data class Error(val message: String) : LoadingState()
+    fun deleteTask(taskUI: TaskUI) {
+        runLaunchIO {
+            when (val result = deleteTaskUseCase.deleteTask(taskUI.toDomain())) {
+                is Result.Loading -> {
+                    _taskStateFlow.value = Result.Loading
+                }
+
+                is Result.Success -> {
+                    _taskStateFlow.value = Result.Success(result.data.toUI())
+                    loadTasks()
+                }
+
+                is Result.Error -> {
+                    _taskStateFlow.value = Result.Error(result.message)
+
+                }
+            }
+        }
+    }
+
+    sealed class LoadingState {
+        data object Loading : LoadingState()
+        data object Loaded : LoadingState()
+        data class Error(val message: String) : LoadingState()
+    }
 }
