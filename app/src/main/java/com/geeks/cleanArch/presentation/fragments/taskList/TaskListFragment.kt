@@ -13,7 +13,6 @@ import com.example.addtaskfeature.addTask.activity.AddTaskActivity
 import com.geeks.cleanArch.R
 import com.geeks.cleanArch.databinding.FragmentTaskListBinding
 import com.geeks.cleanArch.presentation.fragments.adapter.TaskAdapter
-import com.geeks.cleanArch.presentation.fragments.LoadingState
 import com.geeks.cleanArch.presentation.fragments.TaskViewModel
 import com.geeks.cleanArch.presentation.model.TaskUI
 import kotlinx.coroutines.flow.collectLatest
@@ -32,20 +31,6 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
         addTask()
         initialize()
         showTask()
-
-        viewModel.viewModelScope.launch {
-            viewModel.loadingFlow.collect { state ->
-                when (state) {
-                    is LoadingState.Loading -> {}
-                    is LoadingState.Error -> {
-                        Toast.makeText(requireContext(), "Error loading task", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                    else -> {}
-                }
-            }
-        }
     }
 
     private fun addTask() {

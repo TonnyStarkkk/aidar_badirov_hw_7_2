@@ -12,7 +12,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.domain.result.Result
 import com.geeks.cleanArch.R
 import com.geeks.cleanArch.databinding.FragmentDetailBinding
-import com.geeks.cleanArch.presentation.fragments.LoadingState
 import com.geeks.cleanArch.presentation.fragments.TaskViewModel
 import com.geeks.cleanArch.presentation.model.TaskUI
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +30,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getTask(navArgs.taskId)
-        viewModel.loadTask(id)
         setupListeners()
         updateUI()
 
@@ -41,20 +39,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 task.let {
                     taskUI = task[id]
                     updateUI()
-                }
-            }
-        }
-
-        viewModel.viewModelScope.launch {
-            viewModel.loadingFlow.collect { state ->
-                when (state) {
-                    is LoadingState.Loading -> {}
-                    is LoadingState.Error -> {
-                        Toast.makeText(requireContext(), "Error updating task", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                    else -> {}
                 }
             }
         }
