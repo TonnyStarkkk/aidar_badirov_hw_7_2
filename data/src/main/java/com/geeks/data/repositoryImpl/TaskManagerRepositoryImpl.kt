@@ -22,11 +22,12 @@ class TaskManagerRepositoryImpl(
     }
 
     override suspend fun insertTask(taskModel: TaskModel): Result<TaskModel> {
-        return try {
+        try {
             taskManagerDao.insertTask(taskModel.toData())
-            Result.Success(taskModel)
+            return Result.Success(taskModel)
         } catch (e: Exception) {
             Result.Error(e.message.toString())
+            return Result.Error(e.message.toString())
         }
     }
 
@@ -41,29 +42,29 @@ class TaskManagerRepositoryImpl(
     }
 
     override suspend fun getTaskByName(taskName: String): Result<TaskModel> {
-        return try {
+        try {
             val task = taskManagerDao.getTaskByName(taskName).toDomain()
-            Result.Success(task)
+            return Result.Success(task)
         } catch (e: Exception) {
-            Result.Error(e.message.toString())
+            return Result.Error(e.message.toString())
         }
     }
 
     override suspend fun updateTask(taskModel: TaskModel) : Result<TaskModel> {
-        return try {
+        try {
             taskManagerDao.updateTask(taskModel.toData())
-            Result.Success(taskModel)
+            return Result.Success(taskModel)
         } catch (e: Exception) {
-            Result.Error(e.localizedMessage ?: "Error updating task")
+            return Result.Error(e.message.toString())
         }
     }
 
     override suspend fun deleteTask(task: TaskModel): Result<TaskModel> {
-        return try {
+        try {
             taskManagerDao.deleteTask(task.toData())
-            Result.Success(task)
+            return Result.Success(task)
         } catch (e: Exception) {
-            Result.Error(e.localizedMessage?: "Error deleting task")
+            return Result.Error(e.message.toString())
         }
     }
 }

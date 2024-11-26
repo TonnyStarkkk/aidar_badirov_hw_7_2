@@ -8,8 +8,7 @@ class GetTaskUseCase(private val taskManagerRepository: TaskManagerRepository) {
 
     suspend operator fun invoke(id: Int): Result<TaskModel> {
          return try {
-            val task = taskManagerRepository.getTask(id)
-            Result.Success(task)
+             (taskManagerRepository.getTask(id))
         } catch (e: Exception) {
             Result.Error(e.localizedMessage ?: "Task not found")
         }

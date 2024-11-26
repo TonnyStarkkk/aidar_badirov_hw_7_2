@@ -10,7 +10,7 @@ class DeleteTaskUseCase(private val taskManagerRepository: TaskManagerRepository
         return try {
             (taskManagerRepository.deleteTask(taskModel))
         } catch (e: Exception) {
-            Result.Error(e.message ?: "Error deleting task")
+            Result.Error(e.localizedMessage ?: "Error deleting task")
         }
     }
 }
